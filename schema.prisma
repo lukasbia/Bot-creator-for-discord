@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  discordId     String    @unique
+  username      String
+  discriminator String?
+  avatar        String?
+  email         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  bots          Bot[]
+}
+
+model Bot {
+  id              String     @id @default(cuid())
+  discordId       String     @unique
+  name            String
+  avatar          String?
+  banner          String?
+  token           String
+  ownerId         String
+  owner           User       @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  isHosted        Boolean    @default(false)
+  hostingExpiresAt DateTime?
+  guildCount      Int        @default(0)
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  scripts         Script[]
+  variables       Variable[]
+  hostingCredits  HostingCredit[]
+}
+
+model Script {
+  id              String   @id @default(cuid())
+  botId           String
+  bot             Bot      @relation(fields: [botId], references: [id], onDelete: Cascade)
+  name            String
+  trigger         String   // e.g., "messageCreate", "ready"
+  slashTrigger    String?  // e.g., "ping" for /ping
+  isSlashCommand  Boolean  @default(false)
+  cbscriptCode    String   @default("")
+  javascriptCode  String   @default("")
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Variable {
+  id        String   @id @default(cuid())
+  botId     String
+  bot       Bot      @relation(fields: [botId], references: [id], onDelete: Cascade)
+  name      String
+  value     String   @default("")
+  scope     String   @default("global") // global, user, guild
+  userId    String?
+  guildId   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([botId, name, scope, userId, guildId])
+}
+
+model HostingCredit {
+  id        String   @id @default(cuid())
+  botId     String
+  bot       Bot      @relation(fields: [botId], references: [id], onDelete: Cascade)
+  days      Int      @default(1)
+  createdAt DateTime @default(now())
+}

@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --ios-bg: #F2F2F7;
+  --ios-card: #FFFFFF;
+  --ios-tint: #007AFF;
+  --ios-separator: #C6C6C8;
+}
+
+@layer base {
+  body {
+    @apply bg-ios-bg text-gray-900 antialiased;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+@layer components {
+  .ios-card {
+    @apply bg-white rounded-ios-lg shadow-ios p-4;
+  }
+  .ios-button {
+    @apply bg-ios-tint text-white font-semibold rounded-ios-full px-6 py-3 active:scale-95 transition-transform duration-150;
+  }
+  .ios-button-secondary {
+    @apply bg-ios-gray-5 text-ios-tint font-semibold rounded-ios-full px-6 py-3 active:scale-95 transition-transform duration-150;
+  }
+  .ios-input {
+    @apply w-full bg-ios-gray-6 rounded-ios px-4 py-3 text-base outline-none focus:ring-2 focus:ring-ios-tint/30 transition-all;
+  }
+  .ios-sheet {
+    @apply bg-white rounded-t-ios-xl shadow-ios-modal animate-ios-slide-up;
+  }
+  .ios-nav-blur {
+    @apply bg-white/90 backdrop-blur-xl border-b border-ios-separator/50;
+  }
+}
